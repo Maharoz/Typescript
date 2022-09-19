@@ -1,4 +1,4 @@
-//Decorator execute when our class is defined , not when instantiated.
+//creation happens in the order
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -21,7 +21,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-//creation happens in the order
 //execution happen bottom up
 function Logger(logString) {
     console.log("Logger factory");
@@ -65,8 +64,8 @@ var Person = /** @class */ (function () {
     ], Person);
     return Person;
 }());
-// const pers = new Person();
-// console.log(pers);
+var pers = new Person();
+console.log(pers);
 //-----
 function Log(target, propertyName) {
     console.log("Property decorator");
@@ -122,3 +121,30 @@ var Product = /** @class */ (function () {
     ], Product.prototype, "getPriceWithTax");
     return Product;
 }());
+function Autobind(_, _2, descriptor) {
+    var originalMethod = descriptor.value;
+    var adjDescriptor = {
+        configurable: true,
+        enumerable: false,
+        get: function () {
+            var boundFn = originalMethod.bind(this);
+            return boundFn;
+        }
+    };
+    return adjDescriptor;
+}
+var Printer = /** @class */ (function () {
+    function Printer() {
+        this.message = "This works!";
+    }
+    Printer.prototype.showMessage = function () {
+        console.log(this.message);
+    };
+    __decorate([
+        Autobind
+    ], Printer.prototype, "showMessage");
+    return Printer;
+}());
+var p = new Printer();
+var button = document.querySelector("button");
+button.addEventListener("click", p.showMessage);
