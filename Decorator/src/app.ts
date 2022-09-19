@@ -1,5 +1,3 @@
-//Decorator execute when our class is defined , not when instantiated.
-
 //creation happens in the order
 
 //execution happen bottom up
@@ -12,14 +10,22 @@ function Logger(logString: string) {
 }
 
 function WithTemplate(template: string, hookId: string) {
-  return function (constructor: any) {
-    console.log("Template template");
-    const hookEl = document.getElementById(hookId);
-    const p = new constructor();
-    if (hookEl) {
-      hookEl.innerHTML = template;
-      hookEl.querySelector("h1")!.textContent = p.name;
-    }
+  console.log("Template Factory");
+  return function <T extends { new (...args: any[]): { name: string } }>(
+    originalConstructor: T
+  ) {
+    return class extends originalConstructor {
+      constructor(..._: any[]) {
+        super();
+        console.log("Rendering Template");
+        const hookEl = document.getElementById(hookId);
+        //const p = new originalConstructor();
+        if (hookEl) {
+          hookEl.innerHTML = template;
+          hookEl.querySelector("h1")!.textContent = this.name;
+        }
+      }
+    };
   };
 }
 
@@ -34,6 +40,7 @@ class Person {
 }
 
 const pers = new Person();
+console.log(pers);
 
 //-----
 
