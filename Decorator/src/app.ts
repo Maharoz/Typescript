@@ -1,6 +1,10 @@
 //Decorator execute when our class is defined , not when instantiated.
-//Decorator factory
+
+//creation happens in the order
+
+//execution happen bottom up
 function Logger(logString: string) {
+  console.log("Logger factory");
   return function (constructor: Function) {
     console.log(logString);
     console.log(constructor);
@@ -9,6 +13,7 @@ function Logger(logString: string) {
 
 function WithTemplate(template: string, hookId: string) {
   return function (constructor: any) {
+    console.log("Template template");
     const hookEl = document.getElementById(hookId);
     const p = new constructor();
     if (hookEl) {
@@ -18,8 +23,8 @@ function WithTemplate(template: string, hookId: string) {
   };
 }
 
+@Logger("LOGGING-PERSON")
 @WithTemplate("<h1>My Person Object<h1>", "app")
-//@Logger("LOGGING-PERSON")
 class Person {
   name = "Max";
 
